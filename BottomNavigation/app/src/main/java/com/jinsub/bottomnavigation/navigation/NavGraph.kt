@@ -12,7 +12,6 @@ import com.jinsub.bottomnavigation.screens.ProfileScreen
 import com.jinsub.bottomnavigation.screens.SettingsScreen
 
 
-
 @Composable
 fun NavGraph(
     navController: NavHostController,
@@ -43,7 +42,7 @@ fun addHomeScreen(
         HomeScreen(
             navigateToProfile = { id, showDetails ->
                 navController.navigate(
-                    NavRoute.Profile.path.plus(other = "/$id/$showDetails")
+                    NavRoute.Profile.createRoute(1, false)
                 )
             },
             navigateToSettings = {
@@ -60,18 +59,18 @@ fun addProfileScreen(
     navGraphBuilder.composable(
         route = NavRoute.Profile.path.plus("/{id}/{showDetails}"),
         arguments = listOf(
-            navArgument(NavRoute.Profile.id) {
+            navArgument("id") {
                 type = NavType.IntType
             },
-            navArgument(NavRoute.Profile.showDetails) {
+            navArgument("showDetails") {
                 type = NavType.BoolType
             }
         )
     ) { navBackStackEntry ->
         val args = navBackStackEntry.arguments
         ProfileScreen(
-            id = args?.getInt(NavRoute.Profile.id)!!,
-            showDetails = args.getBoolean(NavRoute.Profile.showDetails),
+            id = args?.getInt("id")!!,
+            showDetails = args.getBoolean("showDetails"),
             navigateToSettings = { navController.navigate(NavRoute.Settings.path) }
         )
     }
@@ -85,7 +84,8 @@ fun addSettingsScreen(
         route = NavRoute.Settings.path
     ) {
         SettingsScreen(
-            navigateToHome = { navController
+            navigateToHome = {
+                navController
                     .navigate(NavRoute.Home.path)
             }
         )
